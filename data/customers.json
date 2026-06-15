@@ -1,0 +1,23 @@
+{
+  "john@example.com": {
+    "name": "John Doe",
+    "plan": "Premium",
+    "status": "active",
+    "company": "Acme Corp",
+    "priority": "high"
+  },
+  "sarah@example.com": {
+    "name": "Sarah Smith",
+    "plan": "Basic",
+    "status": "locked",
+    "company": "BrightTech",
+    "priority": "medium"
+  },
+  "mike@example.com": {
+    "name": "Mike Johnson",
+    "plan": "Enterprise",
+    "status": "active",
+    "company": "CloudNova",
+    "priority": "critical"
+  }
+}
