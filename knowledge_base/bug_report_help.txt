@@ -1,0 +1,3 @@
+For bug reports, collect the browser, device, screenshots, error messages, and steps to reproduce the problem. 
+If the dashboard is not working, ask the customer to refresh, clear cache, and try another browser. 
+Create a Jira ticket for engineering investigation.

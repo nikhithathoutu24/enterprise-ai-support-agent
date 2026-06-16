@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from tools.salesforce_tool import get_customer_details
-from tools.jira_tool import create_jira_ticket
-from tools.ollama_tool import classify_with_llama
+from tools.agent_orchestrator import run_support_agent
 
 
 app = FastAPI()
@@ -14,49 +12,45 @@ class SupportMessage(BaseModel):
     message: str
 
 
-def generate_response(ai_result: dict, customer: dict, jira_result: dict):
+def generate_response(agent_result: dict):
+    customer = agent_result["customer"]
+    ai_result = agent_result["ai_classification"]
+    knowledge = agent_result["knowledge_base"]
+    jira_result = agent_result["jira"]
+
     name = customer["name"]
     intent = ai_result["intent"]
     summary = ai_result["summary"]
+    source = knowledge["source"]
 
     if jira_result and jira_result.get("created"):
-        ticket_text = f" A Jira ticket has been created: {jira_result['ticket_id']}."
+        ticket_text = f"A Jira ticket has been created: {jira_result['ticket_id']}."
     else:
-        ticket_text = " No Jira ticket was created."
+        ticket_text = "No Jira ticket was created."
 
-    return f"Hi {name}, your request was classified as {intent}. Summary: {summary}.{ticket_text}"
+    return (
+        f"Hi {name}, your request was classified as {intent}. "
+        f"Summary: {summary}. "
+        f"I found guidance from {source}. "
+        f"{ticket_text}"
+    )
 
 
 @app.get("/")
 def home():
-    return {"status": "AI Support Agent is running with local Llama"}
+    return {"status": "AI Support Agent is running with Agent Orchestrator, Llama, RAG, and Jira"}
 
 
 @app.post("/support")
 def support_agent(input_data: SupportMessage):
-    user_email = input_data.email
-    user_message = input_data.message
-
-    ai_result = classify_with_llama(user_message)
-    customer = get_customer_details(user_email)
-
-    jira_result = None
-    if ai_result.get("requires_ticket"):
-        jira_result = create_jira_ticket(
-            customer,
-            ai_result["intent"],
-            ai_result["summary"]
-        )
-
-    response = generate_response(ai_result, customer, jira_result)
+    agent_result = run_support_agent(input_data.email, input_data.message)
+    response = generate_response(agent_result)
 
     return {
         "input": {
-            "email": user_email,
-            "message": user_message
+            "email": input_data.email,
+            "message": input_data.message
         },
-        "ai_classification": ai_result,
-        "customer": customer,
-        "jira": jira_result,
+        "agent_result": agent_result,
         "output": response
     }

@@ -1,0 +1,4 @@
+If a customer cannot log in, first check whether the account is active or locked. 
+If the account is locked, ask the customer to reset the password and verify their email. 
+If password reset emails are not arriving, ask the customer to check spam folder, confirm the registered email address, and wait up to 5 minutes. 
+If the issue continues, create a high-priority Jira ticket for the support team.

@@ -1,0 +1,3 @@
+For billing issues, check whether the customer was charged twice, has an unpaid invoice, or has a failed payment. 
+Ask the customer to confirm the billing date and payment method. 
+Billing issues should be routed to the billing support team and tracked with a Jira ticket.
