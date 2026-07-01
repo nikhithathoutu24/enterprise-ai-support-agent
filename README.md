@@ -226,7 +226,4 @@ Output:
 
 ## Author
 
-Nikhitha Thoutu
-
-
-University of North Texas
+Nikhitha T
